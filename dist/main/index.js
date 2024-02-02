@@ -29036,6 +29036,15 @@ class LinuxClient {
             await exec.exec('sudo apt install -y cloudflare-warp');
         }
     }
+    async cleanup() {
+        await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
+    }
+    async connect() {
+        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
+    }
+    async disconnect() {
+        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
+    }
     async checkRegistration(organization) {
         let output = '';
         await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
@@ -29049,12 +29058,6 @@ class LinuxClient {
         if (!registered) {
             throw new Error('WARP is not registered');
         }
-    }
-    async connect() {
-        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
-    }
-    async disconnect() {
-        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
     }
     async checkConnection() {
         let output = '';
@@ -29070,11 +29073,116 @@ class LinuxClient {
             throw new Error('WARP is not connected');
         }
     }
-    async cleanup() {
-        await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
-    }
 }
 exports["default"] = LinuxClient;
+
+
+/***/ }),
+
+/***/ 6225:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const exec = __importStar(__nccwpck_require__(1514));
+const fs = __importStar(__nccwpck_require__(3292));
+class MacClient {
+    async writeConfigurations({ organization, authClientID, authClientSecret }) {
+        const config = `
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+  <dict>
+      <key>enable</key>
+      <true />
+      <key>organization</key>
+      <string>${organization}</string>
+      <key>auth_client_id</key>
+      <string>${authClientID}</string>
+      <key>auth_client_secret</key>
+      <string>${authClientSecret}</string>
+      <key>service_mode</key>
+      <string>warp</string>
+      <key>auto_connect</key>
+      <integer>1</integer>
+    </dict>
+    </plist>`;
+        await exec.exec(`sudo mkdir -p "/Library/Managed Preferences/"`);
+        fs.writeFile('/tmp/com.cloudflare.warp.plist', config);
+        await exec.exec('plutil -convert binary1 /tmp/com.cloudflare.warp.plist');
+        await exec.exec('sudo mv /tmp/com.cloudflare.warp.plist "/Library/Managed Preferences/"');
+    }
+    async install(version) {
+        if (version) {
+            await exec.exec(`brew install --cask cloudflare-warp@${version}`);
+        }
+        else {
+            await exec.exec('brew install --cask cloudflare-warp');
+        }
+    }
+    async cleanup() {
+        await exec.exec(`sudo rm "/Library/Managed Preferences/com.cloudflare.warp.plist"`);
+    }
+    async connect() {
+        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
+    }
+    async disconnect() {
+        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
+    }
+    async checkRegistration(organization) {
+        let output = '';
+        await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
+            listeners: {
+                stdout: (data) => {
+                    output += data.toString();
+                }
+            }
+        });
+        const registered = output.includes(`Organization: ${organization}`);
+        if (!registered) {
+            throw new Error('WARP is not registered');
+        }
+    }
+    async checkConnection() {
+        let output = '';
+        await exec.exec('warp-cli', ['--accept-tos', 'status'], {
+            listeners: {
+                stdout: (data) => {
+                    output += data.toString();
+                }
+            }
+        });
+        const connected = output.includes('Status update: Connected');
+        if (!connected) {
+            throw new Error('WARP is not connected');
+        }
+    }
+}
+exports["default"] = MacClient;
 
 
 /***/ }),
@@ -29114,6 +29222,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exponential_backoff_1 = __nccwpck_require__(3183);
 const linux_client_1 = __importDefault(__nccwpck_require__(2582));
+const mac_client_1 = __importDefault(__nccwpck_require__(6225));
 (async () => {
     const organization = core.getInput('organization', {
         required: true,
@@ -29139,6 +29248,10 @@ const linux_client_1 = __importDefault(__nccwpck_require__(2582));
     switch (process.platform) {
         case 'linux': {
             client = new linux_client_1.default();
+            break;
+        }
+        case 'darwin': {
+            client = new mac_client_1.default();
             break;
         }
         default: {

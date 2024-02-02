@@ -44,6 +44,18 @@ class LinuxClient implements WARPClient {
     }
   }
 
+  async cleanup() {
+    await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
+  }
+
+  async connect() {
+    await exec.exec('warp-cli', ['--accept-tos', 'connect']);
+  }
+
+  async disconnect() {
+    await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
+  }
+
   async checkRegistration(organization: string) {
     let output = '';
     await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
@@ -59,14 +71,6 @@ class LinuxClient implements WARPClient {
     }
   }
 
-  async connect() {
-    await exec.exec('warp-cli', ['--accept-tos', 'connect']);
-  }
-
-  async disconnect() {
-    await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
-  }
-
   async checkConnection() {
     let output = '';
     await exec.exec('warp-cli', ['--accept-tos', 'status'], {
@@ -80,10 +84,6 @@ class LinuxClient implements WARPClient {
     if (!connected) {
       throw new Error('WARP is not connected');
     }
-  }
-
-  async cleanup() {
-    await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
   }
 }
 

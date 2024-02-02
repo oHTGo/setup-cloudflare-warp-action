@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { backOff } from 'exponential-backoff';
 import LinuxClient from './libs/linux-client';
+import MacClient from './libs/mac-client';
 import { WARPClient } from './interfaces';
 
 (async () => {
@@ -31,6 +32,10 @@ import { WARPClient } from './interfaces';
   switch (process.platform) {
     case 'linux': {
       client = new LinuxClient();
+      break;
+    }
+    case 'darwin': {
+      client = new MacClient();
       break;
     }
     default: {
