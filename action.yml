@@ -18,3 +18,10 @@ inputs:
   auth-client-secret:
     description: 'The service token client secret'
     required: true
+  version:
+    description: 'The version of the WARP client to install'
+    required: false
+  retry-limit:
+    description: 'The number of times to retry the WARP setup'
+    required: false
+    default: 5

@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import LinuxClient from './lib/linux-client';
+import LinuxClient from './libs/linux-client';
 import { WARPClient } from './interfaces';
 
 (async () => {

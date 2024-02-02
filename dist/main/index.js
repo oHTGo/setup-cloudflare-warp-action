@@ -28975,7 +28975,7 @@ module.exports = v4;
 
 /***/ }),
 
-/***/ 4570:
+/***/ 2582:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -29113,7 +29113,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exponential_backoff_1 = __nccwpck_require__(3183);
-const linux_client_1 = __importDefault(__nccwpck_require__(4570));
+const linux_client_1 = __importDefault(__nccwpck_require__(2582));
 (async () => {
     const organization = core.getInput('organization', {
         required: true,
@@ -29131,6 +29131,10 @@ const linux_client_1 = __importDefault(__nccwpck_require__(4570));
         required: false,
         trimWhitespace: true
     });
+    const retryLimit = parseInt(core.getInput('retry-limit', {
+        required: false,
+        trimWhitespace: true
+    }));
     let client;
     switch (process.platform) {
         case 'linux': {
@@ -29148,10 +29152,12 @@ const linux_client_1 = __importDefault(__nccwpck_require__(4570));
     });
     await client.install(version);
     await (0, exponential_backoff_1.backOff)(async () => client.checkRegistration(organization), {
-        numOfAttempts: 20
+        numOfAttempts: retryLimit
     });
     await client.connect();
-    await (0, exponential_backoff_1.backOff)(async () => client.checkConnection(), { numOfAttempts: 20 });
+    await (0, exponential_backoff_1.backOff)(async () => client.checkConnection(), {
+        numOfAttempts: retryLimit
+    });
     core.saveState('connected', 'true');
 })();
 

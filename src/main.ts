@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { backOff } from 'exponential-backoff';
-import LinuxClient from './lib/linux-client';
+import LinuxClient from './libs/linux-client';
 import { WARPClient } from './interfaces';
 
 (async () => {
@@ -20,6 +20,12 @@ import { WARPClient } from './interfaces';
     required: false,
     trimWhitespace: true
   });
+  const retryLimit = parseInt(
+    core.getInput('retry-limit', {
+      required: false,
+      trimWhitespace: true
+    })
+  );
 
   let client: WARPClient;
   switch (process.platform) {
@@ -39,10 +45,12 @@ import { WARPClient } from './interfaces';
   });
   await client.install(version);
   await backOff(async () => client.checkRegistration(organization), {
-    numOfAttempts: 20
+    numOfAttempts: retryLimit
   });
   await client.connect();
-  await backOff(async () => client.checkConnection(), { numOfAttempts: 20 });
+  await backOff(async () => client.checkConnection(), {
+    numOfAttempts: retryLimit
+  });
 
   core.saveState('connected', 'true');
 })();
