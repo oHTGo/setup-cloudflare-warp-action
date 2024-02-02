@@ -1,6 +1,6 @@
 name: 'Setup Cloudflare WARP'
 description:
-  'Sets up the Cloudflare Warp client in your GitHub Actions workflow'
+  'Sets up the Cloudflare WARP client in your GitHub Actions workflow'
 author: 'oHTGo'
 
 runs:
@@ -8,3 +8,13 @@ runs:
   main: dist/main/index.js
   post: dist/post/index.js
 
+inputs:
+  organization:
+    description: 'The name of your Zero Trust organization'
+    required: true
+  auth-client-id:
+    description: 'The service token client id'
+    required: true
+  auth-client-secret:
+    description: 'The service token client secret'
+    required: true
