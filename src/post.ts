@@ -1,5 +1,4 @@
 import * as core from '@actions/core';
-import { backOff } from 'exponential-backoff';
 import LinuxClient from './lib/linux-client';
 import { WARPClient } from './interfaces';
 
@@ -17,8 +16,6 @@ import { WARPClient } from './interfaces';
   const connected = !!core.getState('connected');
   if (connected) {
     await client.disconnect();
-    const organization = core.getInput('organization', { required: true });
-    await backOff(async () => client.checkRegistration(organization, false));
   }
   client.cleanup();
 })();

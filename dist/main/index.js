@@ -29036,7 +29036,7 @@ class LinuxClient {
             await exec.exec('sudo apt install -y cloudflare-warp');
         }
     }
-    async checkRegistration(organization, isRegistered) {
+    async checkRegistration(organization) {
         let output = '';
         await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
             listeners: {
@@ -29046,11 +29046,8 @@ class LinuxClient {
             }
         });
         const registered = output.includes(`Organization: ${organization}`);
-        if (isRegistered && !registered) {
+        if (!registered) {
             throw new Error('WARP is not registered');
-        }
-        else if (!isRegistered && registered) {
-            throw new Error('WARP is still registered');
         }
     }
     async connect() {
@@ -29068,7 +29065,8 @@ class LinuxClient {
                 }
             }
         });
-        if (!output.includes('Status update: Connected')) {
+        const connected = output.includes('Status update: Connected');
+        if (!connected) {
             throw new Error('WARP is not connected');
         }
     }
@@ -29149,8 +29147,7 @@ const linux_client_1 = __importDefault(__nccwpck_require__(4570));
         authClientSecret
     });
     await client.install(version);
-    await client.checkRegistration(organization, true);
-    await (0, exponential_backoff_1.backOff)(async () => client.checkRegistration(organization, true), {
+    await (0, exponential_backoff_1.backOff)(async () => client.checkRegistration(organization), {
         numOfAttempts: 20
     });
     await client.connect();

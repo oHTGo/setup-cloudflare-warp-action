@@ -38,8 +38,7 @@ import { WARPClient } from './interfaces';
     authClientSecret
   });
   await client.install(version);
-  await client.checkRegistration(organization, true);
-  await backOff(async () => client.checkRegistration(organization, true), {
+  await backOff(async () => client.checkRegistration(organization), {
     numOfAttempts: 20
   });
   await client.connect();

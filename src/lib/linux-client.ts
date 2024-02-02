@@ -44,7 +44,7 @@ class LinuxClient implements WARPClient {
     }
   }
 
-  async checkRegistration(organization: string, isRegistered: boolean) {
+  async checkRegistration(organization: string) {
     let output = '';
     await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
       listeners: {
@@ -54,10 +54,8 @@ class LinuxClient implements WARPClient {
       }
     });
     const registered = output.includes(`Organization: ${organization}`);
-    if (isRegistered && !registered) {
+    if (!registered) {
       throw new Error('WARP is not registered');
-    } else if (!isRegistered && registered) {
-      throw new Error('WARP is still registered');
     }
   }
 
@@ -78,7 +76,8 @@ class LinuxClient implements WARPClient {
         }
       }
     });
-    if (!output.includes('Status update: Connected')) {
+    const connected = output.includes('Status update: Connected');
+    if (!connected) {
       throw new Error('WARP is not connected');
     }
   }

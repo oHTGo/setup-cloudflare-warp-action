@@ -7,7 +7,7 @@ export type ConfigurationParams = {
 export interface WARPClient {
   writeConfigurations(configuration: ConfigurationParams): Promise<void>;
   install: (version?: string) => Promise<void>;
-  checkRegistration(organization: string, isRegistered: boolean): Promise<void>;
+  checkRegistration(organization: string): Promise<void>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   checkConnection(): Promise<void>;
