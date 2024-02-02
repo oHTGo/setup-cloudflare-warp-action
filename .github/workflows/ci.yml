@@ -41,7 +41,10 @@ jobs:
 
   test-action:
     name: GitHub Actions test
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -51,4 +54,10 @@ jobs:
       - name: Test local action
         id: test-action
         uses: ./
+        with:
+          organization: ${{ secrets.ORGANIZATION }}
+          auth-client-id: ${{ secrets.AUTH_CLIENT_ID }}
+          auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
 
+      - name: Ping
+        run: ping -c 10 ${{ secrets.IP }}
