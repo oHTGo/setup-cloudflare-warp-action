@@ -1,7 +1,6 @@
 {
   "name": "setup-cloudflare-warp-action",
   "description": "GitHub Action to setup Cloudflare WARP",
-  "version": "0.0.0",
   "author": "oHTGo",
   "private": true,
   "keywords": [
