@@ -29224,54 +29224,59 @@ const exponential_backoff_1 = __nccwpck_require__(3183);
 const linux_client_1 = __importDefault(__nccwpck_require__(2582));
 const mac_client_1 = __importDefault(__nccwpck_require__(6225));
 (async () => {
-    const organization = core.getInput('organization', {
-        required: true,
-        trimWhitespace: true
-    });
-    const authClientID = core.getInput('auth-client-id', {
-        required: true,
-        trimWhitespace: true
-    });
-    const authClientSecret = core.getInput('auth-client-secret', {
-        required: true,
-        trimWhitespace: true
-    });
-    const version = core.getInput('version', {
-        required: false,
-        trimWhitespace: true
-    });
-    const retryLimit = parseInt(core.getInput('retry-limit', {
-        required: false,
-        trimWhitespace: true
-    }));
-    let client;
-    switch (process.platform) {
-        case 'linux': {
-            client = new linux_client_1.default();
-            break;
+    try {
+        const organization = core.getInput('organization', {
+            required: true,
+            trimWhitespace: true
+        });
+        const authClientID = core.getInput('auth-client-id', {
+            required: true,
+            trimWhitespace: true
+        });
+        const authClientSecret = core.getInput('auth-client-secret', {
+            required: true,
+            trimWhitespace: true
+        });
+        const version = core.getInput('version', {
+            required: false,
+            trimWhitespace: true
+        });
+        const retryLimit = parseInt(core.getInput('retry-limit', {
+            required: false,
+            trimWhitespace: true
+        }));
+        let client;
+        switch (process.platform) {
+            case 'linux': {
+                client = new linux_client_1.default();
+                break;
+            }
+            case 'darwin': {
+                client = new mac_client_1.default();
+                break;
+            }
+            default: {
+                throw new Error('Unsupported platform');
+            }
         }
-        case 'darwin': {
-            client = new mac_client_1.default();
-            break;
-        }
-        default: {
-            throw new Error('Unsupported platform');
-        }
+        await client.writeConfigurations({
+            organization,
+            authClientID,
+            authClientSecret
+        });
+        await client.install(version);
+        await (0, exponential_backoff_1.backOff)(async () => client.checkRegistration(organization), {
+            numOfAttempts: retryLimit
+        });
+        await client.connect();
+        await (0, exponential_backoff_1.backOff)(async () => client.checkConnection(), {
+            numOfAttempts: retryLimit
+        });
+        core.saveState('connected', 'true');
     }
-    await client.writeConfigurations({
-        organization,
-        authClientID,
-        authClientSecret
-    });
-    await client.install(version);
-    await (0, exponential_backoff_1.backOff)(async () => client.checkRegistration(organization), {
-        numOfAttempts: retryLimit
-    });
-    await client.connect();
-    await (0, exponential_backoff_1.backOff)(async () => client.checkConnection(), {
-        numOfAttempts: retryLimit
-    });
-    core.saveState('connected', 'true');
+    catch (err) {
+        core.setFailed(err.message);
+    }
 })();
 
 

@@ -28812,25 +28812,30 @@ const core = __importStar(__nccwpck_require__(2186));
 const linux_client_1 = __importDefault(__nccwpck_require__(2582));
 const mac_client_1 = __importDefault(__nccwpck_require__(6225));
 (async () => {
-    let client;
-    switch (process.platform) {
-        case 'linux': {
-            client = new linux_client_1.default();
-            break;
+    try {
+        let client;
+        switch (process.platform) {
+            case 'linux': {
+                client = new linux_client_1.default();
+                break;
+            }
+            case 'darwin': {
+                client = new mac_client_1.default();
+                break;
+            }
+            default: {
+                throw new Error('Unsupported platform');
+            }
         }
-        case 'darwin': {
-            client = new mac_client_1.default();
-            break;
+        const connected = !!core.getState('connected');
+        if (connected) {
+            await client.disconnect();
         }
-        default: {
-            throw new Error('Unsupported platform');
-        }
+        client.cleanup();
     }
-    const connected = !!core.getState('connected');
-    if (connected) {
-        await client.disconnect();
+    catch (err) {
+        core.setFailed(err.message);
     }
-    client.cleanup();
 })();
 
 

@@ -4,23 +4,27 @@ import MacClient from './libs/mac-client';
 import { WARPClient } from './interfaces';
 
 (async () => {
-  let client: WARPClient;
-  switch (process.platform) {
-    case 'linux': {
-      client = new LinuxClient();
-      break;
+  try {
+    let client: WARPClient;
+    switch (process.platform) {
+      case 'linux': {
+        client = new LinuxClient();
+        break;
+      }
+      case 'darwin': {
+        client = new MacClient();
+        break;
+      }
+      default: {
+        throw new Error('Unsupported platform');
+      }
     }
-    case 'darwin': {
-      client = new MacClient();
-      break;
+    const connected = !!core.getState('connected');
+    if (connected) {
+      await client.disconnect();
     }
-    default: {
-      throw new Error('Unsupported platform');
-    }
+    client.cleanup();
+  } catch (err) {
+    core.setFailed((err as Error).message);
   }
-  const connected = !!core.getState('connected');
-  if (connected) {
-    await client.disconnect();
-  }
-  client.cleanup();
 })();
