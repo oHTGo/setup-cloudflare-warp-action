@@ -1,8 +1,6 @@
 import * as core from '@actions/core';
 import { backOff } from 'exponential-backoff';
-import LinuxClient from './libs/linux-client';
-import MacClient from './libs/mac-client';
-import { WARPClient } from './interfaces';
+import { getClient } from './common';
 
 (async () => {
   try {
@@ -29,20 +27,7 @@ import { WARPClient } from './interfaces';
       })
     );
 
-    let client: WARPClient;
-    switch (process.platform) {
-      case 'linux': {
-        client = new LinuxClient();
-        break;
-      }
-      case 'darwin': {
-        client = new MacClient();
-        break;
-      }
-      default: {
-        throw new Error('Unsupported platform');
-      }
-    }
+    const client = getClient(process.platform);
 
     await client.writeConfigurations({
       organization,

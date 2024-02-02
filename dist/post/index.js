@@ -28564,6 +28564,36 @@ module.exports = v4;
 
 /***/ }),
 
+/***/ 9108:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getClient = void 0;
+const linux_client_1 = __importDefault(__nccwpck_require__(2582));
+const mac_client_1 = __importDefault(__nccwpck_require__(6225));
+const getClient = (platform) => {
+    switch (platform) {
+        case 'linux': {
+            return new linux_client_1.default();
+        }
+        case 'darwin': {
+            return new mac_client_1.default();
+        }
+        default: {
+            throw new Error('Unsupported platform');
+        }
+    }
+};
+exports.getClient = getClient;
+
+
+/***/ }),
+
 /***/ 2582:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -28804,29 +28834,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const linux_client_1 = __importDefault(__nccwpck_require__(2582));
-const mac_client_1 = __importDefault(__nccwpck_require__(6225));
+const common_1 = __nccwpck_require__(9108);
 (async () => {
     try {
-        let client;
-        switch (process.platform) {
-            case 'linux': {
-                client = new linux_client_1.default();
-                break;
-            }
-            case 'darwin': {
-                client = new mac_client_1.default();
-                break;
-            }
-            default: {
-                throw new Error('Unsupported platform');
-            }
-        }
+        const client = (0, common_1.getClient)(process.platform);
         const connected = !!core.getState('connected');
         if (connected) {
             await client.disconnect();
