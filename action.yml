@@ -24,4 +24,4 @@ inputs:
   retry-limit:
     description: 'The number of times to retry the WARP setup'
     required: false
-    default: 20
+    default: 10
