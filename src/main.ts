@@ -39,11 +39,11 @@ import { WARPClient } from './interfaces';
   });
   await client.install(version);
   await client.checkRegistration(organization, true);
-  await backOff(() => client.checkRegistration(organization, true), {
+  await backOff(async () => client.checkRegistration(organization, true), {
     numOfAttempts: 20
   });
   await client.connect();
-  await backOff(() => client.checkConnection(), { numOfAttempts: 20 });
+  await backOff(async () => client.checkConnection(), { numOfAttempts: 20 });
 
   core.saveState('connected', 'true');
 })();
