@@ -27,6 +27,7 @@ class LinuxClient implements WARPClient {
     const gpgKeyPath = await tc.downloadTool(
       'https://pkg.cloudflareclient.com/pubkey.gpg'
     );
+    await exec.exec('echo "DEBUG"');
     await exec.exec(
       `/bin/bash -c "cat ${gpgKeyPath} | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg"`
     );
