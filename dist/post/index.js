@@ -29129,9 +29129,9 @@ const linux_client_1 = __importDefault(__nccwpck_require__(4570));
     }
     const connected = !!core.getState('connected');
     if (connected) {
+        await client.disconnect();
         const organization = core.getInput('organization', { required: true });
         await (0, exponential_backoff_1.backOff)(async () => client.checkRegistration(organization, false));
-        await client.disconnect();
     }
     client.cleanup();
 })();

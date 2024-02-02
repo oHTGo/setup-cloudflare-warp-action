@@ -16,9 +16,9 @@ import { WARPClient } from './interfaces';
   }
   const connected = !!core.getState('connected');
   if (connected) {
+    await client.disconnect();
     const organization = core.getInput('organization', { required: true });
     await backOff(async () => client.checkRegistration(organization, false));
-    await client.disconnect();
   }
   client.cleanup();
 })();
