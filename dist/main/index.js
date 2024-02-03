@@ -28996,7 +28996,7 @@ const getClient = (platform) => {
         case 'darwin': {
             return new mac_client_1.default();
         }
-        case 'windows': {
+        case 'win32': {
             return new win_client_1.default();
         }
         default: {

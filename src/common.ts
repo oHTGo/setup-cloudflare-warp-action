@@ -11,7 +11,7 @@ export const getClient = (platform: string): WARPClient => {
     case 'darwin': {
       return new MacClient();
     }
-    case 'windows': {
+    case 'win32': {
       return new WinClient();
     }
     default: {
