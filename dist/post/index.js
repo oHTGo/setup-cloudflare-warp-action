@@ -28841,36 +28841,61 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
+const fs = __importStar(__nccwpck_require__(3292));
 class WinClient {
-    async writeConfigurations(configuration) { }
+    async writeConfigurations({ organization, authClientID, authClientSecret }) {
+        const config = `
+<dict>
+    <key>organization</key>
+    <string>${organization}</string>
+    <key>auth_client_id</key>
+    <string>${authClientID}</string>
+    <key>auth_client_secret</key>
+    <string>${authClientSecret}</string>
+</dict>`;
+        await fs.mkdir(`C:\\ProgramData\\Cloudflare`);
+        await fs.writeFile(`C:\\ProgramData\\Cloudflare\\mdm.xml`, config);
+    }
     async install() {
         await exec.exec(`choco install -y warp`);
         core.addPath(`C:\\Program Files\\Cloudflare\\Cloudflare WARP\\`);
+    }
+    async cleanup() {
+        await fs.rm(`C:\\ProgramData\\Cloudflare\\mdm.xml`);
+    }
+    async connect() {
+        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
+    }
+    async disconnect() {
+        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
+    }
+    async checkRegistration(organization) {
         let output = '';
-        exec.exec('warp-cli.exe', ['--version'], {
+        await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
                 }
             }
         });
-        core.info(output);
-    }
-    async cleanup() {
-        throw new Error('Method not implemented.');
-    }
-    async connect() {
-        throw new Error('Method not implemented.');
-    }
-    async disconnect() {
-        throw new Error('Method not implemented.');
-    }
-    async checkRegistration(organization) {
-        console.log('Checking registration', organization);
-        throw new Error('Method not implemented.');
+        const registered = output.includes(`Organization: ${organization}`);
+        if (!registered) {
+            throw new Error('WARP is not registered');
+        }
     }
     async checkConnection() {
-        throw new Error('Method not implemented.');
+        let output = '';
+        await exec.exec('warp-cli', ['--accept-tos', 'status'], {
+            listeners: {
+                stdout: (data) => {
+                    output += data.toString();
+                }
+            }
+        });
+        const connected = output.includes('Status update: Connected');
+        if (!connected) {
+            throw new Error('WARP is not connected');
+        }
     }
 }
 exports["default"] = WinClient;
