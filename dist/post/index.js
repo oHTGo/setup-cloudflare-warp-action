@@ -28576,6 +28576,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getClient = void 0;
 const linux_client_1 = __importDefault(__nccwpck_require__(2582));
 const mac_client_1 = __importDefault(__nccwpck_require__(6225));
+const win_client_1 = __importDefault(__nccwpck_require__(6739));
 const getClient = (platform) => {
     switch (platform) {
         case 'linux': {
@@ -28583,6 +28584,9 @@ const getClient = (platform) => {
         }
         case 'darwin': {
             return new mac_client_1.default();
+        }
+        case 'windows': {
+            return new win_client_1.default();
         }
         default: {
             throw new Error('Unsupported platform');
@@ -28802,6 +28806,74 @@ class MacClient {
     }
 }
 exports["default"] = MacClient;
+
+
+/***/ }),
+
+/***/ 6739:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const exec = __importStar(__nccwpck_require__(1514));
+class WinClient {
+    async writeConfigurations(configuration) { }
+    async install() {
+        await exec.exec(`choco install -y warp`);
+        core.addPath(`C:\\Program Files\\Cloudflare\\Cloudflare WARP\\`);
+        let output = '';
+        exec.exec('warp-cli.exe', ['--version'], {
+            listeners: {
+                stdout: (data) => {
+                    output += data.toString();
+                }
+            }
+        });
+        core.info(output);
+    }
+    async cleanup() {
+        throw new Error('Method not implemented.');
+    }
+    async connect() {
+        throw new Error('Method not implemented.');
+    }
+    async disconnect() {
+        throw new Error('Method not implemented.');
+    }
+    async checkRegistration(organization) {
+        console.log('Checking registration', organization);
+        throw new Error('Method not implemented.');
+    }
+    async checkConnection() {
+        throw new Error('Method not implemented.');
+    }
+}
+exports["default"] = WinClient;
 
 
 /***/ }),

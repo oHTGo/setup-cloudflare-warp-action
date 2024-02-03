@@ -1,5 +1,6 @@
 import LinuxClient from './libs/linux-client';
 import MacClient from './libs/mac-client';
+import WinClient from './libs/win-client';
 import { WARPClient } from './interfaces';
 
 export const getClient = (platform: string): WARPClient => {
@@ -9,6 +10,9 @@ export const getClient = (platform: string): WARPClient => {
     }
     case 'darwin': {
       return new MacClient();
+    }
+    case 'windows': {
+      return new WinClient();
     }
     default: {
       throw new Error('Unsupported platform');
