@@ -29264,15 +29264,16 @@ class WinClient {
     <key>auth_client_secret</key>
     <string>${authClientSecret}</string>
 </dict>`;
-        await fs.mkdir(`C:\\ProgramData\\Cloudflare`);
-        await fs.writeFile(`C:\\ProgramData\\Cloudflare\\mdm.xml`, config);
+        await fs.mkdir('C:\\ProgramData\\Cloudflare');
+        await fs.writeFile('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
     }
     async install() {
-        await exec.exec(`choco install -y warp`);
-        core.addPath(`C:\\Program Files\\Cloudflare\\Cloudflare WARP\\`);
+        await exec.exec('choco install -y warp');
+        core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
+        await exec.exec('warp-svc.exe');
     }
     async cleanup() {
-        await fs.rm(`C:\\ProgramData\\Cloudflare\\mdm.xml`);
+        await fs.rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
     }
     async connect() {
         await exec.exec('warp-cli', ['--accept-tos', 'connect']);
