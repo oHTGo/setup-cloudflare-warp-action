@@ -27,6 +27,7 @@ import { getClient } from './common';
       })
     );
 
+    core.info(`Platform: ${process.platform}`);
     const client = getClient(process.platform);
 
     await client.writeConfigurations({

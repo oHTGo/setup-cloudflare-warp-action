@@ -29343,6 +29343,7 @@ const common_1 = __nccwpck_require__(9108);
             required: false,
             trimWhitespace: true
         }));
+        core.info(`Platform: ${process.platform}`);
         const client = (0, common_1.getClient)(process.platform);
         await client.writeConfigurations({
             organization,
