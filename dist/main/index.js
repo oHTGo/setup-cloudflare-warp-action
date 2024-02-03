@@ -29270,7 +29270,7 @@ class WinClient {
     async install() {
         await exec.exec('choco install -y warp');
         core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
-        await exec.exec('sc.exe start CloudflareWARP');
+        await exec.exec('sc.exe queryex state=all type=service');
     }
     async cleanup() {
         await fs.rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
