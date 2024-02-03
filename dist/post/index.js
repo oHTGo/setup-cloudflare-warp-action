@@ -28865,14 +28865,14 @@ class WinClient {
         await fs.rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
     }
     async connect() {
-        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
+        await exec.exec('warp-cli.exe', ['--accept-tos', 'connect']);
     }
     async disconnect() {
-        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
+        await exec.exec('warp-cli.exe', ['--accept-tos', 'disconnect']);
     }
     async checkRegistration(organization) {
         let output = '';
-        await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
+        await exec.exec('warp-cli.exe', ['--accept-tos', 'settings'], {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
@@ -28886,7 +28886,7 @@ class WinClient {
     }
     async checkConnection() {
         let output = '';
-        await exec.exec('warp-cli', ['--accept-tos', 'status'], {
+        await exec.exec('warp-cli.exe', ['--accept-tos', 'status'], {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
