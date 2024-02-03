@@ -28859,8 +28859,6 @@ class WinClient {
     async install() {
         await exec.exec('choco install -y warp');
         core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
-        await exec.exec('Install-WindowsFeature -Name Wireless-Networking');
-        await exec.exec('sc.exe start WlanSvc');
         await exec.exec('sc.exe start CloudflareWARP');
     }
     async cleanup() {
