@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
-import * as fs from 'fs/promises';
+import { existsSync } from 'fs';
+import { mkdir, writeFile, rm } from 'fs/promises';
 import { ConfigurationParams, WARPClient } from '../interfaces';
 
 class WinClient implements WARPClient {
@@ -18,8 +19,9 @@ class WinClient implements WARPClient {
     <key>auth_client_secret</key>
     <string>${authClientSecret}</string>
 </dict>`;
-    await fs.mkdir('C:\\ProgramData\\Cloudflare');
-    await fs.writeFile('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
+    if (!existsSync('C:\\ProgramData\\Cloudflare'))
+      await mkdir('C:\\ProgramData\\Cloudflare');
+    await writeFile('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
   }
 
   async install() {
@@ -28,7 +30,7 @@ class WinClient implements WARPClient {
   }
 
   async cleanup() {
-    await fs.rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
+    await rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
   }
 
   async connect() {

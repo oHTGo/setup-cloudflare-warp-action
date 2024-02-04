@@ -28841,7 +28841,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
-const fs = __importStar(__nccwpck_require__(3292));
+const fs_1 = __nccwpck_require__(7147);
+const promises_1 = __nccwpck_require__(3292);
 class WinClient {
     async writeConfigurations({ organization, authClientID, authClientSecret }) {
         const config = `
@@ -28853,15 +28854,16 @@ class WinClient {
     <key>auth_client_secret</key>
     <string>${authClientSecret}</string>
 </dict>`;
-        await fs.mkdir('C:\\ProgramData\\Cloudflare');
-        await fs.writeFile('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
+        if (!(0, fs_1.existsSync)('C:\\ProgramData\\Cloudflare'))
+            await (0, promises_1.mkdir)('C:\\ProgramData\\Cloudflare');
+        await (0, promises_1.writeFile)('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
     }
     async install() {
         await exec.exec('choco install -y warp');
         core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
     }
     async cleanup() {
-        await fs.rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
+        await (0, promises_1.rm)('C:\\ProgramData\\Cloudflare\\mdm.xml');
     }
     async connect() {
         await exec.exec('warp-cli', ['--accept-tos', 'connect']);
