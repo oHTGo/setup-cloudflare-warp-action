@@ -1,8 +1,9 @@
 import * as exec from '@actions/exec';
 import * as fs from 'fs/promises';
-import { ConfigurationParams, WARPClient } from '../interfaces';
+import BaseClient from './base-client';
+import type { ConfigurationParams } from '../interfaces';
 
-class MacClient implements WARPClient {
+class MacClient extends BaseClient {
   async writeConfigurations({
     organization,
     authClientID,
@@ -47,44 +48,6 @@ class MacClient implements WARPClient {
     await exec.exec(
       `sudo rm "/Library/Managed Preferences/com.cloudflare.warp.plist"`
     );
-  }
-
-  async connect() {
-    await exec.exec('warp-cli', ['--accept-tos', 'connect']);
-  }
-
-  async disconnect() {
-    await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
-  }
-
-  async checkRegistration(organization: string) {
-    let output = '';
-    await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
-      listeners: {
-        stdout: (data: Buffer) => {
-          output += data.toString();
-        }
-      }
-    });
-    const registered = output.includes(`Organization: ${organization}`);
-    if (!registered) {
-      throw new Error('WARP is not registered');
-    }
-  }
-
-  async checkConnection() {
-    let output = '';
-    await exec.exec('warp-cli', ['--accept-tos', 'status'], {
-      listeners: {
-        stdout: (data: Buffer) => {
-          output += data.toString();
-        }
-      }
-    });
-    const connected = output.includes('Status update: Connected');
-    if (!connected) {
-      throw new Error('WARP is not connected');
-    }
   }
 }
 

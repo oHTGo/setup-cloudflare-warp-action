@@ -1,9 +1,9 @@
+import BaseClient from './libs/base-client';
 import LinuxClient from './libs/linux-client';
 import MacClient from './libs/mac-client';
 import WinClient from './libs/win-client';
-import { WARPClient } from './interfaces';
 
-export const getClient = (platform: string): WARPClient => {
+export const getClient = (platform: string): BaseClient => {
   switch (platform) {
     case 'linux': {
       return new LinuxClient();
