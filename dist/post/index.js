@@ -28859,7 +28859,9 @@ class WinClient {
         await (0, promises_1.writeFile)('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
     }
     async install() {
-        await exec.exec('choco install -y warp');
+        await exec.exec('choco', ['install', '-y', 'warp'], {
+            cwd: 'C:\\ProgramData\\chocolatey\\bin'
+        });
         core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
     }
     async cleanup() {
