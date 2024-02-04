@@ -14,7 +14,7 @@ ignorePatterns:
   - '**/coverage/.*'
   - '*.json'
 
-parser: '@typescript-eslint/parser'
+parser: '@typescript-eslint/parse'
 
 parserOptions:
   ecmaVersion: 2023
