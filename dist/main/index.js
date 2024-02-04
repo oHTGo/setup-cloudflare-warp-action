@@ -29270,20 +29270,19 @@ class WinClient {
     async install() {
         await exec.exec('choco install -y warp');
         core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
-        await exec.exec('sc.exe start CloudflareWARP');
     }
     async cleanup() {
         await fs.rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
     }
     async connect() {
-        await exec.exec('warp-cli.exe', ['--accept-tos', 'connect']);
+        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
     }
     async disconnect() {
-        await exec.exec('warp-cli.exe', ['--accept-tos', 'disconnect']);
+        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
     }
     async checkRegistration(organization) {
         let output = '';
-        await exec.exec('warp-cli.exe', ['--accept-tos', 'settings'], {
+        await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
@@ -29297,7 +29296,7 @@ class WinClient {
     }
     async checkConnection() {
         let output = '';
-        await exec.exec('warp-cli.exe', ['--accept-tos', 'status'], {
+        await exec.exec('warp-cli', ['--accept-tos', 'status'], {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
