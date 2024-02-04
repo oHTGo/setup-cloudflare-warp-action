@@ -25,9 +25,7 @@ class WinClient implements WARPClient {
   }
 
   async install() {
-    await exec.exec('choco', ['install', '-y', 'warp'], {
-      cwd: 'C:\\ProgramData\\chocolatey\\bin'
-    });
+    await exec.exec(`PowerShell "choco install -y warp"`);
     core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
   }
 
