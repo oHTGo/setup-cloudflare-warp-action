@@ -24,8 +24,12 @@ class WinClient implements WARPClient {
     await writeFile('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
   }
 
-  async install() {
-    await exec.exec('choco install -y warp');
+  async install(version?: string) {
+    if (version) {
+      await exec.exec(`choco install -y warp --version=${version}}`);
+    } else {
+      await exec.exec('choco install -y warp');
+    }
     core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
   }
 
