@@ -1,5 +1,5 @@
 import * as exec from '@actions/exec';
-import type { ConfigurationParams } from '../interfaces';
+import type { ConfigurationParams } from '../types';
 
 abstract class BaseClient {
   abstract writeConfigurations(

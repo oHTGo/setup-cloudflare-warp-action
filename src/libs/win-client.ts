@@ -3,7 +3,7 @@ import * as exec from '@actions/exec';
 import { existsSync } from 'fs';
 import { mkdir, writeFile, rm } from 'fs/promises';
 import BaseClient from './base-client';
-import type { ConfigurationParams } from '../interfaces';
+import type { ConfigurationParams } from '../types';
 
 class WinClient extends BaseClient {
   async writeConfigurations({

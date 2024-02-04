@@ -1,7 +1,7 @@
 import * as exec from '@actions/exec';
 import * as fs from 'fs/promises';
 import BaseClient from './base-client';
-import type { ConfigurationParams } from '../interfaces';
+import type { ConfigurationParams } from '../types';
 
 class MacClient extends BaseClient {
   async writeConfigurations({
