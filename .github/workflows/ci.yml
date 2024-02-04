@@ -60,4 +60,4 @@ jobs:
           auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
 
       - name: Ping
-        run: ping -c 10 ${{ secrets.IP }}
+        run: ping ${{ secrets.IP }}
