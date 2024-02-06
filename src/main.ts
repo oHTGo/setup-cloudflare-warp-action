@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import { backOff } from 'exponential-backoff';
 import { getClient } from './common';
 
-(async () => {
+export const main = async () => {
   try {
     const organization = core.getInput('organization', {
       required: true,
@@ -27,6 +27,7 @@ import { getClient } from './common';
       })
     );
 
+    core.info(`Platform: ${process.platform}`);
     const client = getClient(process.platform);
 
     await client.writeConfigurations({
@@ -47,4 +48,8 @@ import { getClient } from './common';
   } catch (err) {
     core.setFailed((err as Error).message);
   }
+};
+
+(async () => {
+  await main();
 })();
