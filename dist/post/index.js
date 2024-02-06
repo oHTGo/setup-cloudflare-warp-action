@@ -28873,7 +28873,7 @@ class WinClient extends base_client_1.default {
     }
     async install(version) {
         if (version) {
-            await exec.exec(`choco install -y warp --version=${version}}`);
+            await exec.exec(`choco install -y warp --version=${version}`);
         }
         else {
             await exec.exec('choco install -y warp');

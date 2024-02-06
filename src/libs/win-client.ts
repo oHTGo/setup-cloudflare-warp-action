@@ -27,7 +27,7 @@ class WinClient extends BaseClient {
 
   async install(version?: string) {
     if (version) {
-      await exec.exec(`choco install -y warp --version=${version}}`);
+      await exec.exec(`choco install -y warp --version=${version}`);
     } else {
       await exec.exec('choco install -y warp');
     }
