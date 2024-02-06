@@ -6,7 +6,7 @@ Trust.
 
 ## Requirements
 
-The action currently only supports Linux, MacOS and Windows (self-hosted
+The action currently only supports Linux, macOS and Windows (self-hosted
 runner). On the GitHub hosted runner, Windows has not enabled the **wlansvc**,
 so WARP cannot start.
 
@@ -26,7 +26,7 @@ To use this action, generate a service token using these
 [instructions](https://developers.cloudflare.com/cloudflare-one/identity/service-tokens)
 and configure the action:
 
-```
+```yaml
 uses: oHTGo/setup-cloudflare-warp-action@master
 with:
   organization: your-organization
@@ -37,7 +37,7 @@ with:
 ## Inputs
 
 - organization - (required) The name of your Cloudflare Zero Trust organization.
-- auth_client_id - (required) The service token client id.
+- auth_client_id - (required) The service token client ID.
 - auth_client_secret - (required) The service token client secret.
 - version - (optional) The version of Cloudflare WARP to install. Defaults to
   the latest version.
