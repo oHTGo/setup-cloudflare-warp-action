@@ -13,12 +13,12 @@ cannot start.
 Windows setup steps:
 
 - Open Powershell with **Administration**
+- Install [Choco](https://chocolatey.org/install)
 - Install wlansvc `Install-WindowsFeature -Name Wireless-Networking`
 - Reboot
 - Set the service to automatically start
   `Set-Service WlanSvc -startuptype automatic -passthru`
 - Start the service `Start-Service WlanSvc -passthru`
-- Install [Choco](https://chocolatey.org/install)
 
 ## Usage
 
