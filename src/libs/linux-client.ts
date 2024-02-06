@@ -28,11 +28,9 @@ class LinuxClient extends BaseClient {
     const gpgKeyPath = await tc.downloadTool(
       'https://pkg.cloudflareclient.com/pubkey.gpg'
     );
-    await exec.exec('echo "DEBUG"');
     await exec.exec(
       `/bin/bash -c "cat ${gpgKeyPath} | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg"`
     );
-    await exec.exec('echo "DEBUG"');
     await exec.exec(
       `/bin/bash -c "echo \\"deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main\\" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list"`
     );
