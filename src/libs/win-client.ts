@@ -35,7 +35,9 @@ class WinClient extends BaseClient {
   }
 
   async cleanup() {
-    await rm('C:\\ProgramData\\Cloudflare\\mdm.xml');
+    await rm('C:\\ProgramData\\Cloudflare\\mdm.xml', {
+      force: true
+    });
   }
 }
 

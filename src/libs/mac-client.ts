@@ -46,7 +46,7 @@ class MacClient extends BaseClient {
 
   async cleanup() {
     await exec.exec(
-      `sudo rm "/Library/Managed Preferences/com.cloudflare.warp.plist"`
+      `sudo rm -f "/Library/Managed Preferences/com.cloudflare.warp.plist"`
     );
   }
 }

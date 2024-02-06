@@ -28735,7 +28735,7 @@ class LinuxClient extends base_client_1.default {
         }
     }
     async cleanup() {
-        await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
+        await exec.exec('sudo rm -f /var/lib/cloudflare-warp/mdm.xml');
     }
 }
 exports["default"] = LinuxClient;
@@ -28813,7 +28813,7 @@ class MacClient extends base_client_1.default {
         }
     }
     async cleanup() {
-        await exec.exec(`sudo rm "/Library/Managed Preferences/com.cloudflare.warp.plist"`);
+        await exec.exec(`sudo rm -f "/Library/Managed Preferences/com.cloudflare.warp.plist"`);
     }
 }
 exports["default"] = MacClient;
@@ -28883,7 +28883,9 @@ class WinClient extends base_client_1.default {
         core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
     }
     async cleanup() {
-        await (0, promises_1.rm)('C:\\ProgramData\\Cloudflare\\mdm.xml');
+        await (0, promises_1.rm)('C:\\ProgramData\\Cloudflare\\mdm.xml', {
+            force: true
+        });
     }
 }
 exports["default"] = WinClient;
@@ -28920,9 +28922,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.post = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const common_1 = __nccwpck_require__(9108);
-(async () => {
+const post = async () => {
     try {
         const client = (0, common_1.getClient)(process.platform);
         const connected = !!core.getState('connected');
@@ -28934,6 +28937,10 @@ const common_1 = __nccwpck_require__(9108);
     catch (err) {
         core.setFailed(err.message);
     }
+};
+exports.post = post;
+(async () => {
+    await (0, exports.post)();
 })();
 
 

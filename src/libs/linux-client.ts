@@ -46,7 +46,7 @@ class LinuxClient extends BaseClient {
   }
 
   async cleanup() {
-    await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
+    await exec.exec('sudo rm -f /var/lib/cloudflare-warp/mdm.xml');
   }
 }
 
