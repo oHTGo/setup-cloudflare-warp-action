@@ -16,11 +16,9 @@ jobs:
 
     steps:
       - name: Checkout
-        id: checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
@@ -30,7 +28,6 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Check Format
-        id: npm-format-check
         run: yarn format:check
 
       - name: Lint
@@ -48,11 +45,9 @@ jobs:
 
     steps:
       - name: Checkout
-        id: checkout
         uses: actions/checkout@v4
 
       - name: Test local action
-        id: test-action
         uses: ./
         with:
           organization: ${{ secrets.ORGANIZATION }}

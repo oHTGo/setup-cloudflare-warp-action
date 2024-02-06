@@ -16,22 +16,18 @@ jobs:
 
     steps:
       - name: Checkout
-        id: checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: npm
 
       - name: Install dependencies
-        id: install
         run: yarn install --frozen-lockfile
 
       - name: Build dist directory
-        id: build
         run: yarn bundle
 
       - name: Compare directories
@@ -45,7 +41,6 @@ jobs:
 
       - if: ${{ failure() && steps.diff.outcome == 'failure' }}
         name: Upload artifact
-        id: upload
         uses: actions/upload-artifact@v4
         with:
           name: dist
