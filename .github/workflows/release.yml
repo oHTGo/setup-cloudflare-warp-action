@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+      dry_run:
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Release
+        uses: zwaldowski/semver-release-action@v3
+        with:
+          dry_run: ${{ inputs.dry_run }}
+          bump: ${{ inputs.version }}
+          github_token: ${{ github.token }}

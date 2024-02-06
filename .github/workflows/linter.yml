@@ -12,29 +12,31 @@ permissions:
   statuses: write
 
 jobs:
+  pr:
+    name: Lint PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint PR
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
   lint:
     name: Lint codebase
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
-        id: checkout
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
       - name: Setup Node.js
-        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: npm
-
       - name: Install dependencies
-        id: install
         run: yarn install --frozen-lockfile
-
       - name: Lint codebase
-        id: super-linter
-        uses: super-linter/super-linter/slim@v5
+        uses: super-linter/super-linter@v6.0.0
         env:
           DEFAULT_BRANCH: master
           FILTER_REGEX_EXCLUDE: dist/**/*
@@ -43,3 +45,6 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_JAVASCRIPT_STANDARD: false
           VALIDATE_JSCPD: false
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_SHELL_SHFMT: false

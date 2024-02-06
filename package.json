@@ -9,14 +9,14 @@
     "setup"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20.11.0"
   },
   "scripts": {
     "bundle": "yarn format:write && yarn package",
     "ci-test": "jest",
-    "format:write": "prettier -u --write **/*.ts",
-    "format:check": "prettier -u --check **/*.ts",
-    "lint": "eslint . -c ./.github/linters/.eslintrc.yml",
+    "format:write": "prettier -u --write **/*",
+    "format:check": "prettier -u --check **/*",
+    "lint": "eslint . -c .eslintrc.yml",
     "package": "ncc build -o dist/main src/main.ts && ncc build -o dist/post src/post.ts",
     "test": "jest",
     "all": "yarn format:write && yarn lint && yarn test && yarn package"
@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
-    "@types/node": "^20.0.0",
+    "@types/node": "^20.11.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "@vercel/ncc": "^0.38.1",
