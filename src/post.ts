@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import { getClient } from './common';
 
-(async () => {
+export const post = async () => {
   try {
     const client = getClient(process.platform);
 
@@ -13,4 +13,8 @@ import { getClient } from './common';
   } catch (err) {
     core.setFailed((err as Error).message);
   }
+};
+
+(async () => {
+  await post();
 })();

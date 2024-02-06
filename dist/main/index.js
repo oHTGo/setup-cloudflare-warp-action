@@ -28987,6 +28987,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getClient = void 0;
 const linux_client_1 = __importDefault(__nccwpck_require__(2582));
 const mac_client_1 = __importDefault(__nccwpck_require__(6225));
+const win_client_1 = __importDefault(__nccwpck_require__(6739));
 const getClient = (platform) => {
     switch (platform) {
         case 'linux': {
@@ -28994,6 +28995,9 @@ const getClient = (platform) => {
         }
         case 'darwin': {
             return new mac_client_1.default();
+        }
+        case 'win32': {
+            return new win_client_1.default();
         }
         default: {
             throw new Error('Unsupported platform');
@@ -29005,7 +29009,7 @@ exports.getClient = getClient;
 
 /***/ }),
 
-/***/ 2582:
+/***/ 4637:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -29035,40 +29039,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const exec = __importStar(__nccwpck_require__(1514));
-const fs = __importStar(__nccwpck_require__(3292));
-const tc = __importStar(__nccwpck_require__(7784));
-class LinuxClient {
-    async writeConfigurations({ organization, authClientID, authClientSecret }) {
-        const config = `
-<dict>
-    <key>organization</key>
-    <string>${organization}</string>
-    <key>auth_client_id</key>
-    <string>${authClientID}</string>
-    <key>auth_client_secret</key>
-    <string>${authClientSecret}</string>
-</dict>`;
-        await exec.exec('sudo mkdir -p /var/lib/cloudflare-warp/');
-        await fs.writeFile('/tmp/mdm.xml', config);
-        await exec.exec('sudo mv /tmp/mdm.xml /var/lib/cloudflare-warp/');
-    }
-    async install(version) {
-        const gpgKeyPath = await tc.downloadTool('https://pkg.cloudflareclient.com/pubkey.gpg');
-        await exec.exec('echo "DEBUG"');
-        await exec.exec(`/bin/bash -c "cat ${gpgKeyPath} | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg"`);
-        await exec.exec('echo "DEBUG"');
-        await exec.exec(`/bin/bash -c "echo \\"deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main\\" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list"`);
-        await exec.exec('sudo apt update');
-        if (version) {
-            await exec.exec(`sudo apt install -y cloudflare-warp=${version}`);
-        }
-        else {
-            await exec.exec('sudo apt install -y cloudflare-warp');
-        }
-    }
-    async cleanup() {
-        await exec.exec('sudo rm /var/lib/cloudflare-warp/mdm.xml');
-    }
+class BaseClient {
     async connect() {
         await exec.exec('warp-cli', ['--accept-tos', 'connect']);
     }
@@ -29102,6 +29073,78 @@ class LinuxClient {
         if (!connected) {
             throw new Error('WARP is not connected');
         }
+    }
+}
+exports["default"] = BaseClient;
+
+
+/***/ }),
+
+/***/ 2582:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const exec = __importStar(__nccwpck_require__(1514));
+const fs = __importStar(__nccwpck_require__(3292));
+const tc = __importStar(__nccwpck_require__(7784));
+const base_client_1 = __importDefault(__nccwpck_require__(4637));
+class LinuxClient extends base_client_1.default {
+    async writeConfigurations({ organization, authClientID, authClientSecret }) {
+        const config = `
+<dict>
+    <key>organization</key>
+    <string>${organization}</string>
+    <key>auth_client_id</key>
+    <string>${authClientID}</string>
+    <key>auth_client_secret</key>
+    <string>${authClientSecret}</string>
+</dict>`;
+        await exec.exec('sudo mkdir -p /var/lib/cloudflare-warp/');
+        await fs.writeFile('/tmp/mdm.xml', config);
+        await exec.exec('sudo mv /tmp/mdm.xml /var/lib/cloudflare-warp/');
+    }
+    async install(version) {
+        const gpgKeyPath = await tc.downloadTool('https://pkg.cloudflareclient.com/pubkey.gpg');
+        await exec.exec(`/bin/bash -c "cat ${gpgKeyPath} | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg"`);
+        await exec.exec(`/bin/bash -c "echo \\"deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main\\" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list"`);
+        await exec.exec('sudo apt update');
+        if (version) {
+            await exec.exec(`sudo apt install -y cloudflare-warp=${version}`);
+        }
+        else {
+            await exec.exec('sudo apt install -y cloudflare-warp');
+        }
+    }
+    async cleanup() {
+        await exec.exec('sudo rm -f /var/lib/cloudflare-warp/mdm.xml');
     }
 }
 exports["default"] = LinuxClient;
@@ -29137,10 +29180,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(3292));
-class MacClient {
+const base_client_1 = __importDefault(__nccwpck_require__(4637));
+class MacClient extends base_client_1.default {
     async writeConfigurations({ organization, authClientID, authClientSecret }) {
         const config = `
   <?xml version="1.0" encoding="UTF-8"?>
@@ -29175,44 +29222,82 @@ class MacClient {
         }
     }
     async cleanup() {
-        await exec.exec(`sudo rm "/Library/Managed Preferences/com.cloudflare.warp.plist"`);
-    }
-    async connect() {
-        await exec.exec('warp-cli', ['--accept-tos', 'connect']);
-    }
-    async disconnect() {
-        await exec.exec('warp-cli', ['--accept-tos', 'disconnect']);
-    }
-    async checkRegistration(organization) {
-        let output = '';
-        await exec.exec('warp-cli', ['--accept-tos', 'settings'], {
-            listeners: {
-                stdout: (data) => {
-                    output += data.toString();
-                }
-            }
-        });
-        const registered = output.includes(`Organization: ${organization}`);
-        if (!registered) {
-            throw new Error('WARP is not registered');
-        }
-    }
-    async checkConnection() {
-        let output = '';
-        await exec.exec('warp-cli', ['--accept-tos', 'status'], {
-            listeners: {
-                stdout: (data) => {
-                    output += data.toString();
-                }
-            }
-        });
-        const connected = output.includes('Status update: Connected');
-        if (!connected) {
-            throw new Error('WARP is not connected');
-        }
+        await exec.exec(`sudo rm -f "/Library/Managed Preferences/com.cloudflare.warp.plist"`);
     }
 }
 exports["default"] = MacClient;
+
+
+/***/ }),
+
+/***/ 6739:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const exec = __importStar(__nccwpck_require__(1514));
+const fs_1 = __nccwpck_require__(7147);
+const promises_1 = __nccwpck_require__(3292);
+const base_client_1 = __importDefault(__nccwpck_require__(4637));
+class WinClient extends base_client_1.default {
+    async writeConfigurations({ organization, authClientID, authClientSecret }) {
+        const config = `
+<dict>
+    <key>organization</key>
+    <string>${organization}</string>
+    <key>auth_client_id</key>
+    <string>${authClientID}</string>
+    <key>auth_client_secret</key>
+    <string>${authClientSecret}</string>
+</dict>`;
+        if (!(0, fs_1.existsSync)('C:\\ProgramData\\Cloudflare'))
+            await (0, promises_1.mkdir)('C:\\ProgramData\\Cloudflare');
+        await (0, promises_1.writeFile)('C:\\ProgramData\\Cloudflare\\mdm.xml', config);
+    }
+    async install(version) {
+        if (version) {
+            await exec.exec(`choco install -y warp --version=${version}`);
+        }
+        else {
+            await exec.exec('choco install -y warp');
+        }
+        core.addPath('C:\\Program Files\\Cloudflare\\Cloudflare WARP\\');
+    }
+    async cleanup() {
+        await (0, promises_1.rm)('C:\\ProgramData\\Cloudflare\\mdm.xml', {
+            force: true
+        });
+    }
+}
+exports["default"] = WinClient;
 
 
 /***/ }),
@@ -29246,10 +29331,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.main = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const exponential_backoff_1 = __nccwpck_require__(3183);
 const common_1 = __nccwpck_require__(9108);
-(async () => {
+const main = async () => {
     try {
         const organization = core.getInput('organization', {
             required: true,
@@ -29271,6 +29357,7 @@ const common_1 = __nccwpck_require__(9108);
             required: false,
             trimWhitespace: true
         }));
+        core.info(`Platform: ${process.platform}`);
         const client = (0, common_1.getClient)(process.platform);
         await client.writeConfigurations({
             organization,
@@ -29290,6 +29377,10 @@ const common_1 = __nccwpck_require__(9108);
     catch (err) {
         core.setFailed(err.message);
     }
+};
+exports.main = main;
+(async () => {
+    await (0, exports.main)();
 })();
 
 
