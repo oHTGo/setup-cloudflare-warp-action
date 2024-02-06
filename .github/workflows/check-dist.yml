@@ -13,23 +13,18 @@ jobs:
   check-dist:
     name: Check dist directory
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: npm
-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
       - name: Build dist directory
         run: yarn bundle
-
       - name: Compare directories
         id: diff
         run: |
@@ -38,7 +33,6 @@ jobs:
             git diff --ignore-space-at-eol --text dist/
             exit 1
           fi
-
       - if: ${{ failure() && steps.diff.outcome == 'failure' }}
         name: Upload artifact
         uses: actions/upload-artifact@v4

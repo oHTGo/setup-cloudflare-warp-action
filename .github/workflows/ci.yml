@@ -13,47 +13,37 @@ jobs:
   test-typescript:
     name: TypeScript tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: npm
-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
       - name: Check Format
         run: yarn format:check
-
       - name: Lint
         run: yarn lint
-
       - name: Test
         run: yarn ci-test
-
   test-action:
     name: GitHub Actions test
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Test local action
         uses: ./
         with:
           organization: ${{ secrets.ORGANIZATION }}
           auth-client-id: ${{ secrets.AUTH_CLIENT_ID }}
           auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
-
       - name: Ping
         run: ping -c 10 ${{ secrets.IP }}
         timeout-minutes: 10
