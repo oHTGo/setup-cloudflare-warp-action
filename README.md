@@ -44,7 +44,7 @@ with:
 
 ## Troubleshooting
 
-1. `Status update: Unable to connect. Reason: Registration Missing`:
+1. `Status update: Unable to connect. Reason: Registration Missing`
 
 - Check that the service token is valid and not expired.
 - Check that the service token has the appropriate
