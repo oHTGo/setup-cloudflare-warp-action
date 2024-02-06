@@ -56,3 +56,4 @@ jobs:
 
       - name: Ping
         run: ping -c 10 ${{ secrets.IP }}
+        timeout-minutes: 10
