@@ -9,14 +9,14 @@
     "setup"
   ],
   "engines": {
-    "node": ">=20.11.0"
+    "node": ">=20"
   },
   "scripts": {
     "bundle": "yarn format:write && yarn package",
     "ci-test": "jest",
-    "format:write": "prettier -u --write **/*",
-    "format:check": "prettier -u --check **/*",
-    "lint": "eslint . -c .eslintrc.yml",
+    "format:write": "prettier -u --write **/*.ts",
+    "format:check": "prettier -u --check **/*.ts",
+    "lint": "eslint . -c ./.github/linters/.eslintrc.yml",
     "package": "ncc build -o dist/main src/main.ts && ncc build -o dist/post src/post.ts",
     "test": "jest",
     "all": "yarn format:write && yarn lint && yarn test && yarn package"
