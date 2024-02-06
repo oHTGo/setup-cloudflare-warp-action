@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Lint codebase
-        uses: super-linter/super-linter/slim@v5
+        uses: super-linter/super-linter@v6.0.0
         env:
           DEFAULT_BRANCH: master
           FILTER_REGEX_EXCLUDE: dist/**/*
