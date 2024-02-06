@@ -7,8 +7,8 @@ Trust.
 ## Requirements
 
 The action currently only supports Linux, MacOS and Windows (self-hosted
-runner). On the hosted GitHub, Windows has not enabled the wlansvc, so WARP
-cannot start.
+runner). On the GitHub hosted runner, Windows has not enabled the **wlansvc**,
+so WARP cannot start.
 
 Windows setup steps:
 
