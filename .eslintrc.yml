@@ -1,2 +1,2 @@
 extends:
-  - ./.github/linters/.eslintrc.yml
+  - .github/linters/.eslintrc.yml
