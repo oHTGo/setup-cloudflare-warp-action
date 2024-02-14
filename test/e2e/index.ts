@@ -45,7 +45,7 @@ const checkTeamName = async (page: Page) => {
 
 (async () => {
   puppeteer.use(StealthPlugin());
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   try {
     const page = await browser.newPage();
     await page.goto('https://help.teams.cloudflare.com', {

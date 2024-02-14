@@ -53,3 +53,5 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run e2e tests
         run: yarn test:e2e
+        env:
+          ORGANIZATION: ${{ secrets.ORGANIZATION }}
