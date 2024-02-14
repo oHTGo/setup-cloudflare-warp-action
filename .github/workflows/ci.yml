@@ -38,12 +38,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Test local action
-        uses: ./
-        with:
-          organization: ${{ secrets.ORGANIZATION }}
-          auth-client-id: ${{ secrets.AUTH_CLIENT_ID }}
-          auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -51,6 +45,12 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Test local action
+        uses: ./
+        with:
+          organization: ${{ secrets.ORGANIZATION }}
+          auth-client-id: ${{ secrets.AUTH_CLIENT_ID }}
+          auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
       - name: Run e2e tests
         run: yarn test:e2e
         env:
