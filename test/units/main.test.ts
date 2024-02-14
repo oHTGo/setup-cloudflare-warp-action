@@ -4,7 +4,7 @@ import { getClient } from '../../src/common';
 import BaseClient from '../../src/libs/base-client';
 
 jest.mock('@actions/core');
-jest.mock('../src/common');
+jest.mock('../../src/common');
 
 describe('main script', () => {
   beforeEach(() => {
