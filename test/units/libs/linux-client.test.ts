@@ -1,7 +1,7 @@
 import * as exec from '@actions/exec';
 import * as fs from 'fs/promises';
 import * as tc from '@actions/tool-cache';
-import LinuxClient from '../../src/libs/linux-client';
+import LinuxClient from '../../../src/libs/linux-client';
 
 jest.mock('@actions/exec');
 jest.mock('fs/promises');

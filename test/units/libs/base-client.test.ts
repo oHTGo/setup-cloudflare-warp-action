@@ -1,5 +1,5 @@
 import * as exec from '@actions/exec';
-import BaseClient from '../../src/libs/base-client';
+import BaseClient from '../../../src/libs/base-client';
 
 jest.mock('@actions/exec');
 

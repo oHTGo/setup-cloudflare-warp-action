@@ -1,6 +1,6 @@
 import * as exec from '@actions/exec';
 import * as fs from 'fs/promises';
-import MacClient from '../../src/libs/mac-client';
+import MacClient from '../../../src/libs/mac-client';
 
 jest.mock('@actions/exec');
 jest.mock('fs/promises');

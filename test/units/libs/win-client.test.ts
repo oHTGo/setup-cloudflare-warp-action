@@ -2,7 +2,7 @@ import * as exec from '@actions/exec';
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
 import * as core from '@actions/core';
-import WinClient from '../../src/libs/win-client';
+import WinClient from '../../../src/libs/win-client';
 
 jest.mock('@actions/exec');
 jest.mock('fs/promises');
