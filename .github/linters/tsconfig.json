@@ -4,6 +4,6 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["../../__tests__/**/*", "../../src/**/*"],
+  "include": ["../../test/**/*", "../../src/**/*"],
   "exclude": ["../../dist", "../../node_modules", "../../coverage", "*.json"]
 }
