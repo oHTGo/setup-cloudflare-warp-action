@@ -20,15 +20,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          cache: npm
+          cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Check Format
         run: yarn format:check
       - name: Lint
         run: yarn lint
-      - name: Test
-        run: yarn ci-test
+      - name: Run unit tests
+        run: yarn test:unit
   test-action:
     name: GitHub Actions test
     strategy:
@@ -38,12 +38,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Test local action
         uses: ./
         with:
           organization: ${{ secrets.ORGANIZATION }}
           auth-client-id: ${{ secrets.AUTH_CLIENT_ID }}
           auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
-      - name: Ping
-        run: ping -c 10 ${{ secrets.IP }}
-        timeout-minutes: 10
+      - name: Run e2e tests
+        run: yarn test:e2e
+        env:
+          ORGANIZATION: ${{ secrets.ORGANIZATION }}

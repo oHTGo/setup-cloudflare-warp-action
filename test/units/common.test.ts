@@ -1,7 +1,7 @@
-import { getClient } from '../src/common';
-import LinuxClient from '../src/libs/linux-client';
-import MacClient from '../src/libs/mac-client';
-import WinClient from '../src/libs/win-client';
+import { getClient } from '../../src/common';
+import LinuxClient from '../../src/libs/linux-client';
+import MacClient from '../../src/libs/mac-client';
+import WinClient from '../../src/libs/win-client';
 
 describe('getClient', () => {
   it('should return a LinuxClient for linux platform', () => {

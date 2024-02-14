@@ -1,10 +1,10 @@
 import * as core from '@actions/core';
-import { post } from '../src/post';
-import { getClient } from '../src/common';
-import BaseClient from '../src/libs/base-client';
+import { post } from '../../src/post';
+import { getClient } from '../../src/common';
+import BaseClient from '../../src/libs/base-client';
 
 jest.mock('@actions/core');
-jest.mock('../src/common');
+jest.mock('../../src/common');
 
 describe('post script', () => {
   beforeEach(() => {
