@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build dist directory
-        run: yarn bundle
+        run: yarn package
       - name: Compare directories
         id: diff
         run: |
