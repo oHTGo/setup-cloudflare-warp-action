@@ -27,8 +27,8 @@ jobs:
         run: yarn format:check
       - name: Lint
         run: yarn lint
-      - name: Test
-        run: yarn test
+      - name: Run unit tests
+        run: yarn test:unit
   test-action:
     name: GitHub Actions test
     strategy:
@@ -44,6 +44,12 @@ jobs:
           organization: ${{ secrets.ORGANIZATION }}
           auth-client-id: ${{ secrets.AUTH_CLIENT_ID }}
           auth-client-secret: ${{ secrets.AUTH_CLIENT_SECRET }}
-      - name: Ping
-        run: ping -c 10 ${{ secrets.IP }}
-        timeout-minutes: 10
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run e2e tests
+        run: yarn test:e2e
