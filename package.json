@@ -13,7 +13,6 @@
   },
   "scripts": {
     "bundle": "yarn format:write && yarn package",
-    "ci-test": "jest",
     "format:write": "prettier -u --write **/*",
     "format:check": "prettier -u --check **/*",
     "lint": "eslint . -c .eslintrc.yml",

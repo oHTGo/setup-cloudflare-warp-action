@@ -28,7 +28,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Test
-        run: yarn ci-test
+        run: yarn test
   test-action:
     name: GitHub Actions test
     strategy:
