@@ -6,19 +6,10 @@ Trust.
 
 ## Requirements
 
-The action currently only supports Linux, macOS and Windows (self-hosted
-runner). On the GitHub hosted runner, Windows has not enabled the **wlansvc**,
-so WARP cannot start.
-
-Windows setup steps:
-
-- Open Powershell with **Administration**
-- Install [Choco](https://chocolatey.org/install)
-- Install wlansvc `Install-WindowsFeature -Name Wireless-Networking`
-- Reboot
-- Set the service to automatically start
-  `Set-Service WlanSvc -startuptype automatic -passthru`
-- Start the service `Start-Service WlanSvc -passthru`
+On the GitHub-hosted runner, the action currently supports Linux, macOS and
+Windows since
+[Add WLAN AutoConfig service for Windows image](https://github.com/actions/runner-images/issues/9305)
+issue was resolved.
 
 ## Usage
 
