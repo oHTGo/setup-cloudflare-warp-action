@@ -25,3 +25,7 @@ inputs:
     description: 'The number of times to retry the WARP setup'
     required: false
     default: 10
+
+branding:
+  icon: 'cloud-lightning'
+  color: 'orange'
