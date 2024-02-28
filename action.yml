@@ -1,4 +1,4 @@
-name: 'Setup Cloudflare WARP'
+name: 'Setup Cloudflare WARP Action'
 description:
   'Sets up the Cloudflare WARP client in your GitHub Actions workflow'
 author: 'oHTGo'

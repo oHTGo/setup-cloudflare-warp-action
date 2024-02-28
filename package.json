@@ -5,8 +5,9 @@
   "private": true,
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "setup",
+    "cloudflare",
+    "warp"
   ],
   "engines": {
     "node": ">=20.11.0"
