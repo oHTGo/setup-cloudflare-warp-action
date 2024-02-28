@@ -30,3 +30,4 @@ jobs:
           dry_run: ${{ inputs.dry_run }}
           bump: ${{ inputs.version }}
           github_token: ${{ github.token }}
+          prefix: 'v'
