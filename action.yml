@@ -27,5 +27,5 @@ inputs:
     default: 10
 
 branding:
-  icon: 'cloud'
+  icon: 'cloud-lightning'
   color: 'orange'
